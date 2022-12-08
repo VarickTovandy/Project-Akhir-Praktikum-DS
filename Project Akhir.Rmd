@@ -1,0 +1,102 @@
+---
+title: "Project Akhir"
+author: "Varick Tovandy"
+date: "2022-11-15"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(gapminder)
+library(tidyr)
+library(tidyverse)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Impor dataset dari file
+```{r}
+datacsv = read.csv("C:\\Users\\MSI USER\\Documents\\Semester 5\\Praktikum Data Science\\Project Akhir\\mobile phone rating by dxo.csv")
+datacsv
+```
+
+##Isi data yang hilang dari dataset dengan menggunakan median
+```{r}
+medcamera <- median(datacsv$camera, na.rm = TRUE)
+print(medcamera)
+datacsv[is.na(datacsv$camera), "camera"] <- medcamera
+
+medselfie <- median(datacsv$selfie, na.rm = TRUE)
+print(medselfie)
+datacsv[is.na(datacsv$selfie), "selfie"] <- medselfie
+
+medaudio <- median(datacsv$audio, na.rm = TRUE)
+print(medaudio)
+datacsv[is.na(datacsv$audio), "audio"] <- medaudio
+
+meddisplay <- median(datacsv$display, na.rm = TRUE)
+print(meddisplay)
+datacsv[is.na(datacsv$display), "display"] <- meddisplay
+
+medbattery <- median(datacsv$battery, na.rm = TRUE)
+print(medbattery)
+datacsv[is.na(datacsv$battery), "battery"] <- medbattery
+```
+
+##Buat variabel baru dengan nilai yang berisi rata-rata nilai fitur hp
+```{r}
+summary <- (datacsv$camera + datacsv$selfie + datacsv$audio + datacsv$display + datacsv$battery)/5
+datacsv$summary = summary
+```
+
+##Tampilkan 6 model hp terbaik menurut rata-rata rating
+```{r}
+sum <- order(datacsv$summary, decreasing = TRUE)
+head(datacsv$model[sum])
+```
+## Boxplot masing-masing variabel
+```{r}
+summary(datacsv$camera)
+summary(datacsv$selfie)
+summary(datacsv$audio)
+summary(datacsv$display)
+summary(datacsv$battery)
+summary(datacsv$summary)
+boxplot(datacsv$camera, main="Boxplot variabel kamera belakang HP", col = "red")
+boxplot(datacsv$selfie, main="Boxplot variabel kamera depan HP", col = "green")
+boxplot(datacsv$audio, main="Boxplot variabel speaker HP", col = "blue")
+boxplot(datacsv$display, main="Boxplot variabel layar HP", col = "yellow")
+boxplot(datacsv$battery, main="Boxplot variabel batere HP", col = "purple")
+boxplot(datacsv$summary, main="Boxplot variabel rata-rata rating HP", col = "black")
+```
+
+## Histogram masing-masing variabel
+```{r}
+hist(datacsv$camera, main="Histogram variabel kamera belakang HP", col = "red")
+hist(datacsv$selfie, main="Histogram variabel kamera depan HP", col = "green")
+hist(datacsv$audio, main="Histogram variabel speaker HP", col = "blue")
+hist(datacsv$display, main="Histogram variabel layar HP", col = "yellow")
+hist(datacsv$battery, main="Histogram variabel batere HP", col = "purple")
+hist(datacsv$summary, main="Histogram variabel rata-rata rating HP", col = "black")
+```
+
+## Steam and leaf masing-masing variabel
+```{r}
+stem(datacsv$camera)
+stem(datacsv$selfie)
+stem(datacsv$audio)
+stem(datacsv$display)
+stem(datacsv$battery)
+stem(datacsv$summary)
+```
+
+## Normal QQ Plot
+```{r}
+plot(datacsv$summary, col="blue", main="Normal QQ plot rata-rata rating HP")
+```
